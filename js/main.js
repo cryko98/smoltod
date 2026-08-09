@@ -298,7 +298,8 @@
 
   var labImg = $('#labImg'), labPrompt = $('#labPrompt'), labGo = $('#labGo'),
       labMsg = $('#labMsg'), labBusy = $('#labBusy'), labStatus = $('#labStatus'),
-      labSave = $('#labSave'), labReset = $('#labReset'), labCount = $('#labCount'),
+      labSave = $('#labSave'), labReset = $('#labReset'), labRetry = $('#labRetry'),
+      labCount = $('#labCount'),
       labChips = $('#labChips'), labBadge = $('#labBadge'),
       labFrame = document.querySelector('.lab__frame');
 
@@ -360,6 +361,110 @@
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
+  /* --- candidate scoring -------------------------------------------
+     fal gives us a couple of takes on the same prompt. The model
+     sometimes redraws the face — thickens the line mouth, rounds the
+     half-lidded eyes — and a take that did that differs from the
+     original far more than one that only dropped a hat on him.
+     So: compare each candidate to the base image and keep the one that
+     changed the LEAST, while still having actually added something.
+     Done at 256px, which also stops anti-aliasing noise from counting.
+     ------------------------------------------------------------------ */
+  var SCORE_SIZE = 256;
+  var BLOCK = 8;               // scoring grid cell, 8x8 px of the 256px image
+  var CHANGE_THRESHOLD = 30;   // per-pixel RGB distance that counts as "changed"
+  var MIN_SOLID = 0.003;       // fraction of cells that must be SOLIDLY changed to count as a real edit
+
+  function loadImage(src) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error('image load failed')); };
+      img.src = src;
+    });
+  }
+
+  function pixelsOf(img) {
+    var c = document.createElement('canvas');
+    c.width = c.height = SCORE_SIZE;
+    var ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, SCORE_SIZE, SCORE_SIZE);
+    return ctx.getImageData(0, 0, SCORE_SIZE, SCORE_SIZE).data;
+  }
+
+  /* Two numbers per candidate:
+       mean  — average colour distance from the original. Total deviation:
+               a take that also redrew the face scores much higher than one
+               that only added a hat.
+       solid — fraction of 8x8 cells that are at least half changed. This is
+               what tells a real added object from re-encoding noise: JPEG
+               and rescaling wobble sits in thin 1px lines along the black
+               outlines and never fills a cell, while even a small accessory
+               fills several. Measured: pure noise 0.000, a monocle 0.009,
+               a hat 0.042. */
+  function driftScore(basePx, candPx) {
+    var n = SCORE_SIZE * SCORE_SIZE;
+    var mask = new Uint8Array(n);
+    var total = 0;
+
+    for (var i = 0, j = 0; i < candPx.length; i += 4, j++) {
+      var dr = candPx[i] - basePx[i];
+      var dg = candPx[i + 1] - basePx[i + 1];
+      var db = candPx[i + 2] - basePx[i + 2];
+      var d = Math.sqrt(dr * dr + dg * dg + db * db);
+      total += d;
+      if (d > CHANGE_THRESHOLD) mask[j] = 1;
+    }
+
+    var cells = SCORE_SIZE / BLOCK, solid = 0, need = BLOCK * BLOCK * 0.5;
+    for (var by = 0; by < cells; by++) {
+      for (var bx = 0; bx < cells; bx++) {
+        var cnt = 0;
+        for (var y = 0; y < BLOCK; y++) {
+          var row = (by * BLOCK + y) * SCORE_SIZE + bx * BLOCK;
+          for (var x = 0; x < BLOCK; x++) cnt += mask[row + x];
+        }
+        if (cnt >= need) solid++;
+      }
+    }
+
+    return { mean: total / n, solid: solid / (cells * cells) };
+  }
+
+  function pickBest(candidates) {
+    if (!candidates.length) return Promise.reject(new Error('He came back empty-handed.'));
+    if (candidates.length === 1) return Promise.resolve(candidates[0]);
+
+    return loadImage(BASE_PFP)
+      .then(function (baseImg) {
+        var basePx = pixelsOf(baseImg);
+        return Promise.all(candidates.map(function (src) {
+          return loadImage(src)
+            .then(function (img) {
+              var s = driftScore(basePx, pixelsOf(img));
+              return { src: src, mean: s.mean, solid: s.solid };
+            })
+            .catch(function () { return null; });   // tainted or broken — skip
+        }));
+      })
+      .then(function (scored) {
+        var ok = scored.filter(Boolean);
+        if (!ok.length) return candidates[0];
+
+        // keep only takes that actually put something on him, then the
+        // one that left the rest of him alone
+        var real = ok.filter(function (s) { return s.solid >= MIN_SOLID; });
+        if (real.length) {
+          real.sort(function (a, b) { return a.mean - b.mean; });
+          return real[0].src;
+        }
+        // none of them added anything — take whichever moved the most
+        ok.sort(function (a, b) { return b.solid - a.solid; });
+        return ok[0].src;
+      })
+      .catch(function () { return candidates[0]; });
+  }
+
   // The API always answers JSON; anything else means we're not on the
   // deployed site (opened the file directly, or a plain static server).
   function readJson(res) {
@@ -412,7 +517,12 @@
             .then(function () { return fetch('/api/pfp?id=' + encodeURIComponent(id)); })
             .then(readJson)
             .then(function (data) {
-              if (data.status === 'COMPLETED' && data.image) return data.image;
+              if (data.status === 'COMPLETED') {
+                var list = data.images || (data.image ? [data.image] : []);
+                if (!list.length) throw new Error('He came back without a picture.');
+                if (labStatus) labStatus.textContent = 'Picking the take that looks most like him…';
+                return pickBest(list);
+              }
               if (data.status === 'ERROR' || data.error) {
                 throw new Error(data.error || 'That outfit did not survive.');
               }
@@ -425,6 +535,7 @@
         clearInterval(ticker);
         labImg.src = src;
         if (labSave) { labSave.href = src; labSave.hidden = false; }
+        if (labRetry) labRetry.hidden = false;
         if (labReset) labReset.hidden = false;
         if (labBadge) labBadge.hidden = false;
         if (labFrame) {
@@ -453,10 +564,14 @@
 
   if (labGo) labGo.addEventListener('click', dressHim);
 
+  // same prompt, fresh roll — for when a take still drifts
+  if (labRetry) labRetry.addEventListener('click', dressHim);
+
   if (labReset) {
     labReset.addEventListener('click', function () {
       labImg.src = BASE_PFP;
       labSave.hidden = true;
+      labRetry.hidden = true;
       labReset.hidden = true;
       if (labBadge) labBadge.hidden = true;
       labPrompt.value = '';

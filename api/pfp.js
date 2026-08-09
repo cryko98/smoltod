@@ -16,23 +16,53 @@ const FAL_ENDPOINT = 'fal-ai/nano-banana/edit';
 
 const MAX_PROMPT = 200;
 
-// Locks the character down so only the accessories change. Everything
-// here is deliberate: nano-banana drifts on pose and framing unless you
-// spell out what must stay identical.
+/* How many candidates to ask fal for per generation. The client scores them
+   against the original and keeps the one that drifted least, which is the
+   real defence against the model redrawing the face. 2 is a good balance —
+   set PFP_CANDIDATES=1 to halve the cost and lose that safety net. */
+const CANDIDATES = Math.min(4, Math.max(1, parseInt(process.env.PFP_CANDIDATES, 10) || 2));
+
+/* Locks the character down so ONLY accessories change.
+   Every clause here is a failure we actually saw: nano-banana likes to
+   thicken the mouth into a filled band, round off the half-lidded eyes,
+   and generally "improve" the drawing. Naming each feature explicitly is
+   what stops it. If it ever starts drifting again, tighten these two
+   strings — they are the knob. */
 const STYLE_LOCK = [
-  'Edit this cartoon character image.',
-  'Keep the character itself EXACTLY as it is: identical pose, identical body position and angle,',
-  'identical facial expression and eye direction, identical proportions, identical size and framing',
-  'within the canvas, identical flat cartoon vector style with bold black outlines,',
-  'and the identical plain off-white background.',
-  'Do not move, rotate, crop, zoom, resize or redraw the character.',
-  'Only add or change the clothing and accessories described here:'
+  'You are placing accessories on top of an existing cartoon drawing. You are NOT redrawing it.',
+  'Treat the supplied image as a locked background layer that must be reproduced exactly, pixel for pixel.',
+  '',
+  'The character must come out IDENTICAL to the input in every respect:',
+  '- the same wide, low, flat green toad head that sits directly on the body with no neck,',
+  '  overlapping the top of the blue garment along the same curve;',
+  '- the same two large almond-shaped white eyes with heavy drooping upper eyelids,',
+  '  giving the same half-closed, smug, sleepy look, with the same big black pupils',
+  '  looking in the same direction and the same small white highlight dot in each;',
+  '- the mouth is a SINGLE THIN DARK LINE, a subtle closed smirk curving upward at one end.',
+  '  It must stay a thin line of the exact same weight, length, curve and colour.',
+  '  Never thicken it, never fill it in, never make it a brown or dark band, never widen it,',
+  '  never open it, never add lips, teeth or a tongue, never turn it into a frown or a grin;',
+  '- the same plain blue oversized garment with the same rounded-square shape,',
+  '  the same single sleeve on the left ending in the same small green three-fingered hand,',
+  '  the same small green sliver at the right edge, and the same thin curved crease line;',
+  '- the same two orange-brown oval feet in the same positions;',
+  '- the same flat cel-shaded colours with no gradients or shading, the same bold black outlines',
+  '  of the same weight, the same character size and position on the canvas,',
+  '  and the same plain off-white background.',
+  '',
+  'Do not move, rotate, mirror, crop, zoom, rescale, restyle, re-illustrate, re-shade,',
+  'clean up or otherwise "improve" any part of the character. Do not change its proportions.',
+  '',
+  'The ONLY thing you may add is this, drawn over the artwork like a sticker:'
 ].join(' ');
 
 const STYLE_TAIL = [
-  'Any new item must be drawn in the same flat cartoon style with the same bold black outlines',
-  'and must sit naturally on the character without covering the eyes unless explicitly asked.',
-  'Every other pixel of the image stays as it was.'
+  'Draw the new items in the same flat cartoon style, with the same bold black outlines and',
+  'the same flat colours, so they look like they were part of the original drawing.',
+  'They may overlap the character where such an item naturally sits — a hat covers the top of',
+  'the head, glasses sit over the eyes, a chain hangs over the garment.',
+  'Every pixel that is not covered by one of these new items must remain exactly as it was',
+  'in the input image. The face underneath, and especially the thin line mouth, stays untouched.'
 ].join(' ');
 
 /* ---------- crude best-effort rate limit -----------------
@@ -128,7 +158,7 @@ async function submit(req, res, key) {
     body: JSON.stringify({
       prompt: `${STYLE_LOCK} ${prompt}. ${STYLE_TAIL}`,
       image_urls: [baseImageUrl(req)],
-      num_images: 1,
+      num_images: CANDIDATES,
       output_format: 'jpeg'
     })
   });
@@ -191,22 +221,25 @@ async function poll(req, res, key) {
   );
   const result = await resultRes.json().catch(() => ({}));
 
-  const url = result?.images?.[0]?.url;
-  if (!resultRes.ok || !url) {
+  const urls = (result?.images || []).map((i) => i && i.url).filter(Boolean);
+  if (!resultRes.ok || !urls.length) {
     console.error('[pfp] result missing image', resultRes.status, result);
     return res.status(502).json({ status: 'ERROR', error: 'He came back without a picture. Try again.' });
   }
 
-  const imgRes = await fetch(url);
-  if (!imgRes.ok) {
-    return res.status(200).json({ status: 'COMPLETED', image: url });
-  }
+  // Inline every candidate so the browser can score them without a
+  // cross-origin fetch, and so the save button works off a data URL.
+  const images = await Promise.all(urls.map(async (url) => {
+    try {
+      const imgRes = await fetch(url);
+      if (!imgRes.ok) return url;
+      const buf = Buffer.from(await imgRes.arrayBuffer());
+      const mime = imgRes.headers.get('content-type') || 'image/jpeg';
+      return `data:${mime};base64,${buf.toString('base64')}`;
+    } catch (e) {
+      return url;
+    }
+  }));
 
-  const buf = Buffer.from(await imgRes.arrayBuffer());
-  const mime = imgRes.headers.get('content-type') || 'image/jpeg';
-
-  return res.status(200).json({
-    status: 'COMPLETED',
-    image: `data:${mime};base64,${buf.toString('base64')}`
-  });
+  return res.status(200).json({ status: 'COMPLETED', images: images });
 }

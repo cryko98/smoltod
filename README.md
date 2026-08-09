@@ -62,8 +62,12 @@ server and never reaches the browser.
    `FAL_KEY` = your key, for Production (and Preview if you want it there too).
 3. Redeploy. Env vars are baked in at deploy time — an existing deployment won't pick it up.
 
-Optional: `PFP_BASE_IMAGE` overrides the base image URL. You only need it if the default
-(`https://<your-domain>/assets/smol-tod.jpg`) isn't publicly reachable — see the gotcha below.
+Optional:
+
+- `PFP_CANDIDATES` — how many takes to generate per click, default `2`. See "Keeping the
+  character identical" below; it multiplies the cost.
+- `PFP_BASE_IMAGE` — overrides the base image URL. Only needed if the default
+  (`https://<your-domain>/assets/smol-tod.jpg`) isn't publicly reachable — see the gotcha below.
 
 ### How it works
 
@@ -73,12 +77,40 @@ which would blow past a serverless timeout if the function waited inline. When t
 ready the function inlines it as a data URL, so there's no CORS dance and the save button
 just works.
 
-The pose lock lives in `STYLE_LOCK` / `STYLE_TAIL` at the top of `api/pfp.js`. It spells out
-that the pose, framing, expression, art style and background must stay identical and that
-only the described clothing may change — nano-banana drifts badly without that. If you find
-it still wandering, tighten those strings; that's the single knob worth turning.
-
 The quick-pick chips are the `CHIPS` array in `js/main.js`.
+
+### Keeping the character identical
+
+Left alone, nano-banana doesn't add accessories — it *re-illustrates the whole picture* with
+accessories, and the redraw is never quite him. In practice it thickened the thin line mouth
+into a filled brown band and rounded off the half-lidded eyes. Two things guard against that:
+
+**1. A feature-level lock in the prompt** (`STYLE_LOCK` / `STYLE_TAIL` in `api/pfp.js`). Not
+just "keep the pose" — it names each feature of *this* drawing that must survive: the wide
+flat head, the drooping eyelids, the single sleeve and green hand, the orange feet, and above
+all that the mouth is a thin line that must never be thickened, filled, recoloured or opened.
+The framing matters too: it tells the model it is placing stickers over a locked layer, not
+editing a picture. **If drift ever comes back, tighten these two strings — that's the knob.**
+
+**2. Best-of-N.** Each generation asks fal for `PFP_CANDIDATES` takes (default **2**) and the
+browser keeps the one that changed the least. Two numbers per candidate, measured on a 256px
+downscale in `driftScore()`:
+
+- `mean` — average colour distance from the original. A take that also redrew the face scores
+  far higher than one that only dropped a hat on him. This is the ranking.
+- `solid` — fraction of 8×8 cells that are at least half changed. This separates a real added
+  object from re-encoding noise, which sits in 1px slivers along the black outlines and never
+  fills a cell. Measured: pure noise `0.000`, a monocle `0.009`, a hat `0.042`. A take must
+  clear `MIN_SOLID` to count as having added anything, so a candidate that ignored the prompt
+  can't win by virtue of being unchanged.
+
+Ranking by total deviation does mildly favour the take with the smaller accessory. That's the
+intended trade — the brief is that he must not change.
+
+**`PFP_CANDIDATES` is a direct cost multiplier**: 2 candidates means 2× the fal bill per
+click. Set it to `1` to halve the cost and lose the safety net; 3–4 buys a bit more safety.
+
+If a take still drifts, **TRY AGAIN** re-rolls the same prompt without retyping it.
 
 ### Two things to know before you launch it
 
