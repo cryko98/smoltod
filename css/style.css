@@ -878,6 +878,17 @@ body.rave .marquee__track{ animation-duration:5s; }
   .rstep{ grid-template-columns:1fr; }
   .rstep__dot{ margin-inline:auto; }
   .buycta{ flex-direction:column; text-align:center; }
+
+  /* a 44-char address wraps here, so stack the bar instead of letting
+     the label float beside two lines of monospace */
+  .ca{
+    flex-direction:column; gap:.5rem;
+    border-radius:20px; padding:.8rem .9rem;
+    width:100%;
+  }
+  .ca__label{ font-size:.75rem; letter-spacing:1.5px; opacity:.8; }
+  .ca__value{ max-width:100%; text-align:center; line-height:1.5; }
+  .ca__copy{ width:100%; padding-block:.5em; }
 }
 
 /* =========================================================

@@ -32,20 +32,20 @@ The originals were 1080×1080 PNGs totalling ~10 MB, which would have made the p
 crawl on mobile. They're resized to 900px and saved as quality-82 JPEG (~975 KB for
 all nine). If you add more, compress them the same way before shipping.
 
-## Two things to fill in
+## Config
 
-Both live at the top of `js/main.js`:
+Both values live at the top of `js/main.js`:
 
 ```js
-var CA    = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx';  // real contract address
-var X_URL = '';                               // https://x.com/yourhandle
+var CA    = '9w2nokGrjFACQaJaEJGafZgsxBePfDWdUav6ofSJpump';
+var X_URL = 'https://x.com/smoltod';
 ```
 
-- **CA** — injected into both the hero bar and the "How to buy" block, and used by the copy
-  buttons. Update it in this one place only. The placeholder in `index.html` is just what
-  shows before JS runs.
-- **X_URL** — while it's empty, every X button shows a "dropping soon" toast instead of
-  navigating. Paste the URL and all of them (nav, final CTA, footer) go live at once.
+- **CA** — injected into the hero bar and the "How to buy" block, and used by both copy
+  buttons. If it ever changes, update it here *and* in the two `<code>` blocks in
+  `index.html` (those are what render before JS runs).
+- **X_URL** — drives the nav, final CTA and footer X buttons. Leave it empty and they fall
+  back to a "dropping soon" toast instead of navigating.
 
 ## Local preview
 

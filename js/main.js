@@ -6,7 +6,7 @@
   'use strict';
 
   var LOGO = 'assets/smol-tod.jpg';
-  var CA = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx';   // <-- swap in the real contract address
+  var CA = '9w2nokGrjFACQaJaEJGafZgsxBePfDWdUav6ofSJpump';   // token contract address
   var X_URL = 'https://x.com/smoltod';         // X / Twitter profile
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
