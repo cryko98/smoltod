@@ -118,45 +118,170 @@
   });
 
   /* ---------------------------------------------------------
-     MEME VAULT
+     THE MEMES — one source of truth for the tape, the vault,
+     the lightbox, the toad rain and the floating CTA toads.
      --------------------------------------------------------- */
   var MEMES = [
-    { top: 'WHEN SHE SAYS',        bot: 'SHE LIKES SHORT KINGS', hue: 0,   bg: '#ffe0ec', stamp: 'certified' },
-    { top: 'SIR',                  bot: 'THIS IS A LILY PAD',    hue: 40,  bg: '#dff3ff', stamp: 'unhinged' },
-    { top: 'MY EYES ARE UP HERE',  bot: '(THEY WERE NOT)',       hue: 300, bg: '#e7ffd9', stamp: 'busted' },
-    { top: '0.5% BODY FAT',        bot: '99.5% SWEATER',         hue: 190, bg: '#fff0cf', stamp: 'natty' },
-    { top: 'HE IS NOT BLOATED',    bot: 'HE IS BULKING',         hue: 90,  bg: '#f0e2ff', stamp: 'science' },
-    { top: 'CHART GO DOWN?',       bot: 'HE GO UP',              hue: 220, bg: '#d9fff1', stamp: 'bullish' },
-    { top: 'TOD SEES YOUR BAGS',   bot: 'TOD IS AROUSED',        hue: 330, bg: '#ffe3d1', stamp: 'concerning' },
-    { top: 'RIBBIT',               bot: 'MEANS I LOVE YOU',      hue: 20,  bg: '#e2ecff', stamp: 'romantic' },
-    { top: 'FROG OF THE YEAR',     bot: '— PUDDLE MONTHLY',      hue: 130, bg: '#fff7d6', stamp: 'award' },
-    { top: 'DOWN BAD',             bot: 'BUT UP ONLY',           hue: 260, bg: '#ffd9f2', stamp: 'relatable' },
-    { top: 'HE ASKED FOR',         bot: 'A HUG. JUST A HUG.',    hue: 60,  bg: '#dcf7e5', stamp: 'suspicious' },
-    { top: 'SMOL HANDS',           bot: 'BIG DIAMOND ENERGY',    hue: 170, bg: '#e9e2ff', stamp: 'diamond' }
+    { file: 'meme-gm.jpg',         title: 'GM.',
+      sub: 'Awake four minutes. Already in love with you.',
+      alt: 'Smol Tod waking up in bed next to a mug reading GM', stamp: 'daily' },
+    { file: 'meme-doomscroll.jpg', title: 'HE SAW THE CHART',
+      sub: 'And, more importantly, the chart saw him back.',
+      alt: 'Close-up of Smol Tod staring at a phone screen', stamp: 'unwell' },
+    { file: 'meme-fishing.jpg',    title: 'BOTTOM FISHING',
+      sub: 'Caught three reds and a feeling.',
+      alt: 'Smol Tod fishing a lake full of red and green candles', stamp: 'strategy' },
+    { file: 'meme-bull.jpg',       title: 'SMOL BODY. BULL SHADOW.',
+      sub: '4.2 cm of completely unexplained confidence.',
+      alt: 'Smol Tod under a spotlight casting the shadow of a huge bull', stamp: 'natty' },
+    { file: 'meme-army.jpg',       title: 'THE TOD ARMY',
+      sub: 'Every single one of them is horny. This is the strategy.',
+      alt: 'A battlefield full of tiny Smol Tods in helmets', stamp: 'enlisted' },
+    { file: 'meme-money.jpg',      title: 'MONEY ANGELS',
+      sub: 'He did it for the puddle. He says.',
+      alt: 'Smol Tod making a snow angel in a field of banknotes', stamp: 'wagmi' },
+    { file: 'meme-rafiki.jpg',     title: 'THE PRESENTATION',
+      sub: 'They held him up. He winked at the entire kingdom.',
+      alt: 'Smol Tod held aloft on a cliff like a newborn prince', stamp: 'legendary' },
+    { file: 'meme-halo.jpg',       title: 'TOO PURE FOR THIS PUDDLE',
+      sub: 'Lasted nine minutes up there. Came back damp.',
+      alt: 'Smol Tod sitting on a cloud with a halo', stamp: 'briefly' },
+    { file: 'meme-cozy.jpg',       title: 'HOLDING THROUGH THE DIP',
+      sub: 'Tucked in. Unbothered. Moisturised. Still down bad.',
+      alt: 'Smol Tod tucked into bed under a patchwork quilt', stamp: 'diamond' }
   ];
 
+  MEMES.forEach(function (m) { m.src = 'assets/' + m.file; });
+
+  /* ---------------------------------------------------------
+     THE TOD TAPE — two rows drifting in opposite directions.
+     Each row holds the list twice so the loop is seamless.
+     --------------------------------------------------------- */
+  function buildTape(row, list, rotSeed) {
+    if (!row) return;
+    var frag = document.createDocumentFragment();
+    for (var pass = 0; pass < 2; pass++) {
+      list.forEach(function (m, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tape__item';
+        btn.style.setProperty('--rot', (((i + rotSeed) % 2 ? 1 : -1) * (1 + (i % 3) * 0.7)).toFixed(2) + 'deg');
+        btn.setAttribute('aria-label', 'Open meme: ' + m.title);
+        // the second pass is a visual duplicate — hide it from screen readers
+        if (pass === 1) btn.setAttribute('aria-hidden', 'true');
+        btn.tabIndex = pass === 1 ? -1 : 0;
+        var img = document.createElement('img');
+        img.src = m.src;
+        img.alt = pass === 0 ? m.alt : '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        btn.appendChild(img);
+        btn.addEventListener('click', function () { openLightbox(MEMES.indexOf(m)); });
+        frag.appendChild(btn);
+      });
+    }
+    row.appendChild(frag);
+  }
+
+  buildTape($('#tapeRowA'), MEMES, 0);
+  buildTape($('#tapeRowB'), MEMES.slice().reverse(), 1);
+
+  /* ---------------------------------------------------------
+     MEME VAULT
+     --------------------------------------------------------- */
   var grid = $('#memegrid');
   if (grid) {
-    var frag = document.createDocumentFragment();
+    var gfrag = document.createDocumentFragment();
     MEMES.forEach(function (m, i) {
       var card = document.createElement('figure');
       card.className = 'meme reveal';
-      card.style.background = m.bg;
-      card.style.setProperty('--rot', ((i % 2 ? 1 : -1) * (1 + (i % 3) * 0.9)).toFixed(2) + 'deg');
-      card.style.setProperty('--hue', m.hue + 'deg');
-      card.style.setProperty('--spin', ((i % 2 ? -1 : 1) * 4) + 'deg');
-      card.innerHTML =
-        '<img class="meme__img" src="' + LOGO + '" alt="Smol Tod meme: ' + m.top + ' ' + m.bot + '" loading="lazy" />' +
-        '<figcaption class="meme__top">' + m.top + '</figcaption>' +
-        '<figcaption class="meme__bot">' + m.bot + '</figcaption>' +
-        '<span class="meme__stamp">' + m.stamp + '</span>';
-      card.addEventListener('click', function () {
-        blorp(140 + i * 22);
-        popHearts(card, 5, ['😳', '🔥', '💦', '🐸', '💚'][i % 5]);
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', 'Open meme: ' + m.title);
+      card.style.setProperty('--rot', ((i % 2 ? 1 : -1) * (1 + (i % 3) * 0.8)).toFixed(2) + 'deg');
+
+      var img = document.createElement('img');
+      img.className = 'meme__img';
+      img.src = m.src;
+      img.alt = m.alt;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+
+      var cap = document.createElement('figcaption');
+      cap.className = 'meme__cap';
+      var b = document.createElement('b');
+      b.textContent = m.title;
+      var s = document.createElement('span');
+      s.textContent = m.sub;
+      cap.appendChild(b); cap.appendChild(s);
+
+      var stamp = document.createElement('span');
+      stamp.className = 'meme__stamp';
+      stamp.textContent = m.stamp;
+
+      card.appendChild(img); card.appendChild(cap); card.appendChild(stamp);
+      card.addEventListener('click', function () { openLightbox(i); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); }
       });
-      frag.appendChild(card);
+      gfrag.appendChild(card);
     });
-    grid.appendChild(frag);
+    grid.appendChild(gfrag);
+  }
+
+  /* ---------------------------------------------------------
+     LIGHTBOX
+     --------------------------------------------------------- */
+  var lb = $('#lightbox'), lbImg = $('#lbImg'), lbTitle = $('#lbTitle'),
+      lbSub = $('#lbSub'), lbDl = $('#lbDl');
+  var lbIndex = 0, lbLastFocus = null;
+
+  function renderLightbox() {
+    var m = MEMES[lbIndex];
+    lbImg.src = m.src;
+    lbImg.alt = m.alt;
+    lbTitle.textContent = m.title;
+    lbSub.textContent = m.sub;
+    lbDl.href = m.src;
+    lbDl.setAttribute('download', m.file);
+  }
+
+  function openLightbox(i) {
+    if (!lb) return;
+    lbIndex = (i + MEMES.length) % MEMES.length;
+    lbLastFocus = document.activeElement;
+    renderLightbox();
+    lb.hidden = false;
+    document.body.classList.add('lb-open');
+    blorp(300);
+    $('#lbClose').focus();
+  }
+
+  function closeLightbox() {
+    if (!lb || lb.hidden) return;
+    lb.hidden = true;
+    document.body.classList.remove('lb-open');
+    blorp(120);
+    if (lbLastFocus && lbLastFocus.focus) lbLastFocus.focus();
+  }
+
+  function stepLightbox(d) {
+    lbIndex = (lbIndex + d + MEMES.length) % MEMES.length;
+    renderLightbox();
+    blorp(200 + d * 40);
+  }
+
+  if (lb) {
+    $('#lbClose').addEventListener('click', closeLightbox);
+    $('#lbPrev').addEventListener('click', function () { stepLightbox(-1); });
+    $('#lbNext').addEventListener('click', function () { stepLightbox(1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') stepLightbox(-1);
+      else if (e.key === 'ArrowRight') stepLightbox(1);
+    });
   }
 
   /* ---------------------------------------------------------
@@ -331,7 +456,8 @@
       (function (i) {
         setTimeout(function () {
           var t = document.createElement('img');
-          t.src = LOGO;
+          // half logo, half actual memes raining down
+          t.src = Math.random() < 0.5 ? LOGO : MEMES[Math.floor(Math.random() * MEMES.length)].src;
           t.alt = '';
           t.setAttribute('aria-hidden', 'true');
           var size = 26 + Math.random() * 48;
@@ -358,8 +484,9 @@
   if (ctaToads && !reduced) {
     for (var i = 0; i < 7; i++) {
       var img = document.createElement('img');
-      img.src = LOGO;
+      img.src = MEMES[i % MEMES.length].src;
       img.alt = '';
+      img.loading = 'lazy';
       img.style.left = (4 + i * 14 + Math.random() * 6) + '%';
       img.style.animationDuration = (11 + Math.random() * 9) + 's';
       img.style.animationDelay = (-Math.random() * 14) + 's';

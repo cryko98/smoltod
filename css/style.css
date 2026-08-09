@@ -361,6 +361,67 @@ p{ margin:0 0 1em; }
 @keyframes scrollx{ from{ transform:translateX(0);} to{ transform:translateX(-33.333%);} }
 
 /* =========================================================
+   THE TOD TAPE — floating meme band
+   ========================================================= */
+.tape{
+  position:relative;
+  padding:clamp(2.2rem,5vw,3.4rem) 0;
+  margin:clamp(2rem,6vw,4rem) 0;
+  background:
+    repeating-linear-gradient(-45deg,rgba(18,18,15,.05) 0 18px,transparent 18px 36px),
+    var(--blue);
+  border-block:var(--bd) solid var(--ink);
+  overflow:hidden;
+  rotate:-1.4deg;
+  box-shadow:0 10px 0 rgba(18,18,15,.16);
+}
+.tape__row{
+  display:flex; gap:clamp(.7rem,1.6vw,1.2rem);
+  width:max-content;
+  animation:tapescroll 46s linear infinite;
+  will-change:transform;
+}
+.tape__row + .tape__row{ margin-top:clamp(.7rem,1.6vw,1.2rem); }
+.tape__row--rev{ animation-direction:reverse; animation-duration:58s; }
+.tape:hover .tape__row{ animation-play-state:paused; }
+@keyframes tapescroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+.tape__item{
+  flex:0 0 auto;
+  width:clamp(150px,19vw,238px);
+  aspect-ratio:1/1;
+  border:var(--bd) solid var(--ink); border-radius:20px;
+  overflow:hidden; background:var(--white);
+  box-shadow:6px 6px 0 var(--ink);
+  rotate:var(--rot,0deg);
+  cursor:pointer; padding:0;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, rotate .22s;
+}
+.tape__item img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tape__item:hover,.tape__item:focus-visible{
+  rotate:0deg; transform:translateY(-10px) scale(1.06);
+  box-shadow:12px 12px 0 var(--ink); z-index:4;
+}
+.tape__label,.tape__hint{
+  position:absolute; z-index:5;
+  font-family:var(--font-display); letter-spacing:1px;
+  border:3.5px solid var(--ink); border-radius:999px;
+  padding:.25em .9em; box-shadow:4px 4px 0 var(--ink);
+  pointer-events:none;
+}
+.tape__label{
+  top:-3px; left:clamp(1rem,5vw,4rem);
+  background:var(--orange-lt); color:var(--ink);
+  font-size:clamp(.72rem,1.5vw,.95rem); rotate:-3deg;
+}
+.tape__hint{
+  bottom:-3px; right:clamp(1rem,5vw,4rem);
+  background:var(--green-lt); color:var(--ink);
+  font-size:clamp(.66rem,1.3vw,.82rem); rotate:2deg;
+}
+@media (max-width:600px){ .tape__hint{ display:none; } }
+
+/* =========================================================
    SECTIONS & HEADINGS
    ========================================================= */
 .section{ padding:clamp(3.5rem,9vw,7rem) 0; position:relative; }
@@ -408,6 +469,13 @@ p{ margin:0 0 1em; }
   background:var(--ink); border-radius:14px; padding:.05em .45em;
   border:var(--bd) solid var(--ink); rotate:-5deg;
 }
+.panel__pic{
+  width:100%; aspect-ratio:5/4; object-fit:cover;
+  border:3.5px solid var(--ink); border-radius:14px;
+  margin:.6rem 0 1.1rem; background:var(--cream-dk);
+  transition:transform .3s ease;
+}
+.panel:hover .panel__pic{ transform:scale(1.03) rotate(-.8deg); }
 .panel h3{ font-size:1.5rem; margin:.4rem 0 .8rem; }
 .panel p{ font-weight:500; margin:0; }
 .panel b{ color:var(--green-dk); }
@@ -488,40 +556,104 @@ p{ margin:0 0 1em; }
    MEME VAULT
    ========================================================= */
 .memegrid{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:1.3rem; width:min(1320px,94vw); margin-inline:auto;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:clamp(1rem,2.2vw,1.6rem); width:min(1320px,94vw); margin-inline:auto;
 }
 .meme{
-  position:relative; aspect-ratio:1/1; overflow:hidden;
-  border:var(--bd) solid var(--ink); border-radius:18px;
+  position:relative; overflow:hidden; margin:0; padding:0;
+  background:var(--white);
+  border:var(--bd) solid var(--ink); border-radius:20px;
   box-shadow:var(--shadow-soft);
-  display:grid; place-items:center; padding:.9rem;
-  rotate:var(--rot); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, rotate .25s;
-  cursor:crosshair;
+  rotate:var(--rot);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, rotate .25s;
+  cursor:zoom-in;
 }
-.meme:hover{ rotate:0deg; transform:translate(-4px,-6px) scale(1.04); box-shadow:12px 12px 0 var(--ink); z-index:3; }
+.meme:hover,.meme:focus-visible{
+  rotate:0deg; transform:translate(-4px,-7px) scale(1.03);
+  box-shadow:13px 13px 0 var(--ink); z-index:3;
+}
 .meme__img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
-  filter:hue-rotate(var(--hue)) saturate(var(--sat,1.15)) contrast(1.05);
-  transition:transform .3s ease, filter .3s;
-  mix-blend-mode:multiply;
+  width:100%; aspect-ratio:1/1; object-fit:cover; display:block;
+  transition:transform .35s ease;
 }
-.meme:hover .meme__img{ transform:scale(1.09) rotate(var(--spin,3deg)); }
-.meme__top,.meme__bot{
-  position:relative; z-index:2; width:100%; text-align:center;
-  font-family:var(--font-display); font-size:clamp(.82rem,1.6vw,1.05rem);
-  line-height:1.05; color:var(--white); letter-spacing:.5px;
-  -webkit-text-stroke:3.5px var(--ink); paint-order:stroke fill;
+.meme:hover .meme__img{ transform:scale(1.07); }
+.meme__cap{
+  position:relative; z-index:2;
+  background:var(--cream); border-top:3.5px solid var(--ink);
+  padding:.65rem .85rem .75rem;
 }
-.meme__top{ align-self:start; }
-.meme__bot{ align-self:end; }
+.meme__cap b{
+  display:block; font-family:var(--font-display); font-weight:400;
+  font-size:clamp(.95rem,1.7vw,1.1rem); line-height:1.1; letter-spacing:.4px;
+}
+.meme__cap span{ display:block; font-size:.82rem; font-weight:500; opacity:.7; line-height:1.35; margin-top:.15rem; }
 .meme__stamp{
-  position:absolute; top:8px; right:8px; z-index:3;
-  font-family:var(--font-display); font-size:.6rem; letter-spacing:.5px;
-  background:var(--ink); color:var(--white); border-radius:999px; padding:.15em .6em;
-  opacity:0; transform:translateY(-6px); transition:.2s;
+  position:absolute; top:10px; right:10px; z-index:3;
+  font-family:var(--font-display); font-size:.62rem; letter-spacing:.5px;
+  background:var(--ink); color:var(--white);
+  border:2.5px solid var(--white); border-radius:999px; padding:.2em .7em;
+  rotate:5deg; opacity:0; transform:translateY(-8px); transition:.22s;
 }
 .meme:hover .meme__stamp{ opacity:1; transform:translateY(0); }
+
+/* =========================================================
+   LIGHTBOX
+   ========================================================= */
+.lightbox{
+  position:fixed; inset:0; z-index:9995;
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center;
+  gap:clamp(.4rem,2vw,1.5rem); padding:clamp(1rem,4vw,2.5rem);
+  background:rgba(18,18,15,.88); backdrop-filter:blur(6px);
+  animation:lbfade .2s ease;
+}
+.lightbox[hidden]{ display:none; }
+@keyframes lbfade{ from{ opacity:0; } to{ opacity:1; } }
+.lightbox__figure{
+  margin:0; justify-self:center; max-width:min(620px,100%);
+  background:var(--white); border:var(--bd) solid var(--ink); border-radius:22px;
+  overflow:hidden; box-shadow:12px 12px 0 rgba(0,0,0,.45);
+  animation:lbpop .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes lbpop{ from{ transform:scale(.85) rotate(-2deg); opacity:0; } to{ transform:none; opacity:1; } }
+.lightbox__figure img{
+  width:100%; max-height:min(62vh,620px); object-fit:contain; display:block;
+  background:var(--cream-dk);
+}
+.lightbox__cap{
+  padding:.9rem 1.1rem 1.1rem; border-top:3.5px solid var(--ink);
+  display:grid; gap:.35rem; justify-items:start;
+}
+.lightbox__cap b{ font-family:var(--font-display); font-weight:400; font-size:clamp(1.1rem,2.6vw,1.5rem); line-height:1.1; }
+.lightbox__cap span{ font-weight:500; font-size:.9rem; opacity:.72; }
+.lightbox__dl{
+  margin-top:.35rem; font-family:var(--font-display); font-size:.85rem; letter-spacing:.5px;
+  background:var(--green); color:var(--white);
+  border:3px solid var(--ink); border-radius:999px; padding:.4em 1em;
+  box-shadow:3px 3px 0 var(--ink); transition:.15s;
+}
+.lightbox__dl:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+.lightbox__nav,.lightbox__close{
+  display:grid; place-items:center; padding:0; line-height:1;
+  background:var(--white); color:var(--ink);
+  border:var(--bd) solid var(--ink); border-radius:50%;
+  box-shadow:4px 4px 0 rgba(0,0,0,.5);
+  transition:transform .15s, box-shadow .15s, background .15s;
+}
+.lightbox__nav{ width:clamp(42px,7vw,58px); aspect-ratio:1; font-size:clamp(1.6rem,4vw,2.4rem); }
+.lightbox__nav:hover{ background:var(--green-lt); transform:translateY(-3px); }
+.lightbox__close{
+  position:absolute; top:clamp(.8rem,3vw,1.6rem); right:clamp(.8rem,3vw,1.6rem);
+  width:46px; height:46px; font-size:1.2rem; font-weight:700;
+}
+.lightbox__close:hover{ background:#ff6b6b; transform:rotate(90deg); }
+@media (max-width:560px){
+  .lightbox{ grid-template-columns:1fr; grid-template-rows:auto auto; justify-items:center; }
+  .lightbox__nav{ position:fixed; bottom:1.2rem; }
+  .lightbox__nav--prev{ left:18%; }
+  .lightbox__nav--next{ right:18%; }
+  .lightbox__figure{ grid-row:1; }
+}
+body.lb-open{ overflow:hidden; }
 
 /* =========================================================
    HOW TO BUY
@@ -570,13 +702,24 @@ p{ margin:0 0 1em; }
   position:absolute; left:31px; top:31px; bottom:31px; width:5px;
   background:repeating-linear-gradient(180deg,var(--ink) 0 12px,transparent 12px 24px);
 }
-.rstep{ display:grid; grid-template-columns:66px 1fr; align-items:start; gap:1rem; }
+.rstep{ position:relative; display:grid; grid-template-columns:66px 1fr; align-items:start; gap:1rem; }
+/* the dashed line runs the full height of .road — mask the tail below the last dot */
+.rstep:last-child::after{
+  content:''; position:absolute; left:31px; top:62px; bottom:-2px; width:5px;
+  background:var(--cream-dk); z-index:1;
+}
 .rstep__dot{
   width:62px; height:62px; display:grid; place-items:center; font-size:1.6rem;
   background:var(--white); border:var(--bd) solid var(--ink); border-radius:50%;
   box-shadow:4px 4px 0 var(--ink); z-index:2;
+  overflow:hidden; padding:0;
 }
 .rstep--alt .rstep__dot{ background:var(--green-lt); }
+.rstep__dot img{
+  width:100%; height:100%; object-fit:cover; border-radius:50%;
+  transition:transform .25s ease;
+}
+.rstep:hover .rstep__dot img{ transform:scale(1.15); }
 .rstep__card{
   background:var(--white); border:var(--bd) solid var(--ink); border-radius:var(--r);
   padding:1.1rem 1.3rem; box-shadow:var(--shadow-soft);
@@ -748,4 +891,7 @@ body.rave .marquee__track{ animation-duration:5s; }
     transition-duration:.001ms !important; scroll-behavior:auto !important;
   }
   .reveal{ opacity:1; transform:none; }
+  /* the tape stops drifting and becomes a plain swipeable row */
+  .tape{ overflow-x:auto; rotate:0deg; }
+  .tape__row{ animation:none !important; transform:none !important; }
 }

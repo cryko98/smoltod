@@ -167,6 +167,14 @@
   </div>
 </div>
 
+<!-- ============ THE TOD TAPE — floating meme band ============ -->
+<section class="tape" id="tape" aria-label="Meme tape">
+  <span class="tape__label">◆ THE TOD TAPE ◆</span>
+  <div class="tape__row" id="tapeRowA"></div>
+  <div class="tape__row tape__row--rev" id="tapeRowB"></div>
+  <span class="tape__hint">click any frame →</span>
+</section>
+
 <!-- ============ LORE ============ -->
 <section class="section section--lore" id="lore">
   <div class="wrap">
@@ -181,6 +189,7 @@
     <div class="panels">
       <article class="panel reveal" style="--tilt:-1.6deg">
         <div class="panel__num">01</div>
+        <img class="panel__pic" src="assets/meme-rafiki.jpg" alt="Smol Tod being held aloft on a cliff like a newborn prince" loading="lazy" decoding="async" />
         <h3>Born in a puddle nobody mapped</h3>
         <p>
           Smol Tod hatched in a rain puddle behind a petrol station, roughly the size of a
@@ -193,6 +202,7 @@
 
       <article class="panel panel--blue reveal" style="--tilt:1.4deg">
         <div class="panel__num">02</div>
+        <img class="panel__pic" src="assets/meme-bull.jpg" alt="Smol Tod under a spotlight, casting the shadow of an enormous bull" loading="lazy" decoding="async" />
         <h3>The Sweater Incident</h3>
         <p>
           At fourteen months he bought a blue sweater six sizes too big so people would think he
@@ -205,6 +215,7 @@
 
       <article class="panel panel--orange reveal" style="--tilt:-1.1deg">
         <div class="panel__num">03</div>
+        <img class="panel__pic" src="assets/meme-doomscroll.jpg" alt="Close-up of Smol Tod's half-lidded stare, lit by a phone screen" loading="lazy" decoding="async" />
         <h3>The Rizz Awakening</h3>
         <p>
           One damp Tuesday, Tod discovered that if he lowered his eyelids <b>exactly 40%</b> and
@@ -217,6 +228,7 @@
 
       <article class="panel panel--green reveal" style="--tilt:1.8deg">
         <div class="panel__num">04</div>
+        <img class="panel__pic" src="assets/meme-fishing.jpg" alt="Smol Tod fishing a lake full of red and green candles" loading="lazy" decoding="async" />
         <h3>He fell in love with a chart</h3>
         <p>
           Tod hopped past a phone screen, saw a green candle, and something inside him
@@ -294,7 +306,7 @@
     <header class="shead reveal">
       <span class="shead__eyebrow">handle with gloves</span>
       <h2 class="shead__title">THE <span class="hl hl--orange">MEME VAULT</span></h2>
-      <p class="shead__sub">Right click, save, ruin somebody's group chat. Hover them. They're alive.</p>
+      <p class="shead__sub">Click one to blow it up, then save it and ruin somebody's group chat. Arrow keys work.</p>
     </header>
   </div>
 
@@ -365,7 +377,7 @@
       <div class="road__line" aria-hidden="true"></div>
 
       <div class="rstep reveal">
-        <div class="rstep__dot">🥚</div>
+        <div class="rstep__dot"><img src="assets/meme-cozy.jpg" alt="" loading="lazy" decoding="async" /></div>
         <div class="rstep__card">
           <h3>Phase 0 — Be smol</h3>
           <p>Complete. Was born this way. No further action required.</p>
@@ -373,7 +385,7 @@
       </div>
 
       <div class="rstep rstep--alt reveal">
-        <div class="rstep__dot">😳</div>
+        <div class="rstep__dot"><img src="assets/meme-gm.jpg" alt="" loading="lazy" decoding="async" /></div>
         <div class="rstep__card">
           <h3>Phase 1 — Be horny</h3>
           <p>Also complete, arguably overachieved. Launch on Solana, burn the LP, wink at every chart in a 40 km radius.</p>
@@ -381,7 +393,7 @@
       </div>
 
       <div class="rstep reveal">
-        <div class="rstep__dot">📣</div>
+        <div class="rstep__dot"><img src="assets/meme-army.jpg" alt="" loading="lazy" decoding="async" /></div>
         <div class="rstep__card">
           <h3>Phase 2 — Puddle expansion</h3>
           <p>Meme raids, sticker packs, the toad in every timeline. Trending on X or the sweater comes off. (It will not come off.)</p>
@@ -389,7 +401,7 @@
       </div>
 
       <div class="rstep rstep--alt reveal">
-        <div class="rstep__dot">🌊</div>
+        <div class="rstep__dot"><img src="assets/meme-halo.jpg" alt="" loading="lazy" decoding="async" /></div>
         <div class="rstep__card">
           <h3>Phase 3 — From puddle to pond</h3>
           <p>Listings, tracker partners, a community that is far too emotionally invested in an amphibian. Ideal.</p>
@@ -397,7 +409,7 @@
       </div>
 
       <div class="rstep reveal">
-        <div class="rstep__dot">👑</div>
+        <div class="rstep__dot"><img src="assets/meme-money.jpg" alt="" loading="lazy" decoding="async" /></div>
         <div class="rstep__card">
           <h3>Phase 4 — Still smol. Just richer.</h3>
           <p>He will not grow. He will not change. He will simply own a slightly nicer puddle and continue to be a menace.</p>
@@ -488,6 +500,21 @@
     <p class="footer__copy">© <span id="year">2026</span> Smol Tod. Built damp. <span class="footer__egg" id="egg">🐸</span></p>
   </div>
 </footer>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Meme viewer" hidden>
+  <button class="lightbox__close" id="lbClose" aria-label="Close viewer">✕</button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Previous meme">‹</button>
+  <figure class="lightbox__figure">
+    <img id="lbImg" src="" alt="" />
+    <figcaption class="lightbox__cap">
+      <b id="lbTitle"></b>
+      <span id="lbSub"></span>
+      <a class="lightbox__dl" id="lbDl" href="#" download>SAVE THIS ONE</a>
+    </figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Next meme">›</button>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

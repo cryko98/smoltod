@@ -7,3 +7,7 @@ node_modules/
 
 # original drop of the logo - the site uses assets/smol-tod.jpg
 smol tod.jpg
+
+# full-res meme originals (~10 MB). The site ships the compressed
+# assets/meme-*.jpg versions instead; keep these locally as masters.
+assets/meme-*.png
