@@ -69,6 +69,7 @@
     <a href="#lore">Lore</a>
     <a href="#todnomics">Todnomics</a>
     <a href="#memes">Meme Vault</a>
+    <a href="#pfp">PFP Lab</a>
     <a href="#buy">How to Buy</a>
     <a href="#faq">FAQ</a>
   </nav>
@@ -317,6 +318,53 @@
   </div>
 </section>
 
+<!-- ============ PFP LAB ============ -->
+<section class="section section--lab" id="pfp">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">dress the toad</span>
+      <h2 class="shead__title">THE <span class="hl hl--blue">PFP LAB</span></h2>
+      <p class="shead__sub">
+        Tell him what to put on. He keeps the pose, the stare and the sweater —
+        everything else is negotiable. Then make it your profile picture.
+      </p>
+    </header>
+
+    <div class="lab reveal">
+      <div class="lab__stage">
+        <div class="lab__frame">
+          <img id="labImg" src="assets/smol-tod.jpg" alt="Your Smol Tod profile picture" />
+          <div class="lab__busy" id="labBusy" hidden>
+            <span class="lab__spinner" aria-hidden="true"></span>
+            <p class="lab__status" id="labStatus">Warming up the puddle…</p>
+          </div>
+          <span class="lab__badge" id="labBadge" hidden>fresh fit</span>
+        </div>
+        <div class="lab__actions">
+          <a class="btn btn--green" id="labSave" download="smol-tod-pfp.jpg" hidden>SAVE PFP</a>
+          <button class="btn btn--ghost" id="labReset" type="button" hidden>START OVER</button>
+        </div>
+      </div>
+
+      <div class="lab__controls">
+        <label class="lab__label" for="labPrompt">What is he wearing?</label>
+        <textarea id="labPrompt" rows="3" maxlength="200"
+          placeholder="a tiny cowboy hat and round black sunglasses"></textarea>
+        <div class="lab__meta"><span id="labCount">0</span> / 200</div>
+
+        <p class="lab__label lab__label--sm">Or tap a few:</p>
+        <div class="lab__chips" id="labChips"></div>
+
+        <button class="btn btn--big btn--blue lab__go" id="labGo" type="button">DRESS HIM UP</button>
+        <p class="lab__msg" id="labMsg" role="status" aria-live="polite"></p>
+        <p class="lab__note">
+          Powered by fal.ai. One toad at a time — he changes slowly and with great ceremony.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="marquee marquee--blue" aria-hidden="true">
   <div class="marquee__track marquee__track--rev">
     <span>MY EYES ARE UP HERE</span><i>👀</i><span>THEY WERE NOT</span><i>🐸</i><span>SHORT KING SZN</span><i>👑</i>
@@ -489,6 +537,7 @@
       <a href="#lore">Lore</a>
       <a href="#todnomics">Todnomics</a>
       <a href="#memes">Memes</a>
+      <a href="#pfp">PFP Lab</a>
       <a href="#buy">How to buy</a>
       <a href="#faq">FAQ</a>
       <a href="https://x.com/smoltod" data-x-link>X</a>

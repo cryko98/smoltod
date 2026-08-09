@@ -5,6 +5,11 @@ desktop.ini
 node_modules/
 *.log
 
+# never commit the fal key
+.env
+.env.*
+!.env.example
+
 # original drop of the logo - the site uses assets/smol-tod.jpg
 smol tod.jpg
 

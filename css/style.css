@@ -656,6 +656,100 @@ p{ margin:0 0 1em; }
 body.lb-open{ overflow:hidden; }
 
 /* =========================================================
+   PFP LAB
+   ========================================================= */
+.section--lab{
+  background:
+    repeating-linear-gradient(90deg,rgba(18,18,15,.045) 0 2px,transparent 2px 26px),
+    var(--cream-dk);
+  border-block:var(--bd) solid var(--ink);
+}
+.lab{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(1.4rem,3.4vw,2.6rem); align-items:start;
+}
+@media (max-width:860px){ .lab{ grid-template-columns:1fr; } }
+
+.lab__stage{ position:relative; display:grid; gap:1rem; justify-items:center; }
+.lab__frame{
+  position:relative; width:100%; max-width:420px; aspect-ratio:1/1;
+  background:var(--white);
+  border:5px solid var(--ink); border-radius:26px;
+  box-shadow:12px 12px 0 var(--ink);
+  overflow:hidden; rotate:-1deg;
+}
+.lab__frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+.lab__frame.is-fresh img{ animation:labpop .55s cubic-bezier(.34,1.56,.64,1); }
+@keyframes labpop{
+  0%{ transform:scale(.82) rotate(-4deg); opacity:0; }
+  60%{ transform:scale(1.04) rotate(1.5deg); opacity:1; }
+  100%{ transform:none; }
+}
+.lab__busy{
+  position:absolute; inset:0; z-index:3;
+  display:grid; place-content:center; justify-items:center; gap:1rem;
+  background:rgba(247,243,230,.9); backdrop-filter:blur(3px);
+  padding:1.2rem; text-align:center;
+}
+.lab__busy[hidden]{ display:none; }
+.lab__spinner{
+  width:56px; height:56px; border-radius:50%;
+  border:6px solid var(--ink); border-top-color:var(--green-lt);
+  animation:labspin .9s linear infinite;
+}
+@keyframes labspin{ to{ transform:rotate(360deg); } }
+.lab__status{ margin:0; font-family:var(--font-display); font-size:1rem; letter-spacing:.4px; }
+.lab__badge{
+  position:absolute; top:12px; right:12px; z-index:4;
+  font-family:var(--font-display); font-size:.72rem; letter-spacing:.5px;
+  background:var(--green); color:var(--white);
+  border:3px solid var(--ink); border-radius:999px; padding:.2em .8em;
+  box-shadow:3px 3px 0 var(--ink); rotate:6deg;
+  animation:stickerfloat 3s ease-in-out infinite;
+}
+.lab__badge[hidden]{ display:none; }
+.lab__actions{ display:flex; gap:.7rem; flex-wrap:wrap; justify-content:center; min-height:1px; }
+.lab__actions [hidden]{ display:none; }
+
+.lab__controls{
+  background:var(--white);
+  border:var(--bd) solid var(--ink); border-radius:var(--r);
+  padding:clamp(1.2rem,2.6vw,1.8rem);
+  box-shadow:var(--shadow-hard); rotate:.6deg;
+}
+.lab__label{
+  display:block; font-family:var(--font-display); font-size:1.05rem;
+  letter-spacing:.4px; margin:0 0 .5rem;
+}
+.lab__label--sm{ font-size:.9rem; margin-top:1.2rem; opacity:.75; }
+.lab__controls textarea{
+  width:100%; font:inherit; font-weight:500; color:var(--ink);
+  background:var(--cream); resize:vertical; min-height:5.2em;
+  border:3.5px solid var(--ink); border-radius:14px; padding:.7rem .9rem;
+  box-shadow:inset 3px 3px 0 rgba(18,18,15,.08);
+}
+.lab__controls textarea::placeholder{ color:rgba(18,18,15,.42); }
+.lab__meta{ text-align:right; font-size:.76rem; font-weight:600; opacity:.5; margin-top:.3rem; }
+
+.lab__chips{ display:flex; flex-wrap:wrap; gap:.45rem; }
+.lab__chip{
+  font-family:var(--font-display); font-size:.78rem; letter-spacing:.3px;
+  background:var(--cream); border:3px solid var(--ink); border-radius:999px;
+  padding:.28em .8em; box-shadow:2px 2px 0 var(--ink);
+  transition:transform .14s, box-shadow .14s, background .14s;
+}
+.lab__chip:hover{ background:var(--green-lt); transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink); }
+.lab__chip:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); }
+
+.lab__go{ width:100%; justify-content:center; margin-top:1.3rem; }
+.lab__go[disabled]{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:var(--shadow-soft); }
+
+.lab__msg{ margin:.9rem 0 0; font-weight:600; font-size:.9rem; min-height:1.2em; }
+.lab__msg--bad{ color:#c0392b; }
+.lab__msg--good{ color:var(--green-dk); }
+.lab__note{ margin:.7rem 0 0; font-size:.78rem; opacity:.55; font-weight:500; }
+
+/* =========================================================
    HOW TO BUY
    ========================================================= */
 .steps{ list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.4rem; }

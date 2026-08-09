@@ -285,6 +285,188 @@
   }
 
   /* ---------------------------------------------------------
+     PFP LAB — talks to /api/pfp, which proxies fal.ai.
+     Submit returns a job id; we poll until the toad is dressed.
+     --------------------------------------------------------- */
+  var CHIPS = [
+    'a tiny cowboy hat', 'round black sunglasses', 'a chunky gold chain',
+    'a red santa hat', 'a golden crown', 'big over-ear headphones',
+    'a pirate eyepatch', 'a flower crown', 'a wool beanie',
+    'a monocle and top hat', 'a striped scarf', 'a backwards cap',
+    'a tiny bow tie', 'a leather jacket', 'a viking helmet'
+  ];
+
+  var labImg = $('#labImg'), labPrompt = $('#labPrompt'), labGo = $('#labGo'),
+      labMsg = $('#labMsg'), labBusy = $('#labBusy'), labStatus = $('#labStatus'),
+      labSave = $('#labSave'), labReset = $('#labReset'), labCount = $('#labCount'),
+      labChips = $('#labChips'), labBadge = $('#labBadge'),
+      labFrame = document.querySelector('.lab__frame');
+
+  var BASE_PFP = 'assets/smol-tod.jpg';
+  var labRunning = false;
+
+  var WAIT_LINES = [
+    'Warming up the puddle…',
+    'He is choosing an outfit…',
+    'Checking the mirror. Again.',
+    'Adjusting for maximum smoulder…',
+    'Nothing fits a 4.2 cm toad…',
+    'Almost. He is nervous.'
+  ];
+
+  function labSay(msg, kind) {
+    if (!labMsg) return;
+    labMsg.textContent = msg || '';
+    labMsg.className = 'lab__msg' + (kind ? ' lab__msg--' + kind : '');
+  }
+
+  function labBusyOn(on) {
+    labRunning = on;
+    if (labBusy) labBusy.hidden = !on;
+    if (labGo) {
+      labGo.disabled = on;
+      labGo.textContent = on ? 'DRESSING…' : 'DRESS HIM UP';
+    }
+  }
+
+  if (labChips) {
+    CHIPS.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'lab__chip';
+      b.textContent = c;
+      b.addEventListener('click', function () {
+        var cur = labPrompt.value.trim();
+        // don't add the same thing twice
+        if (cur.toLowerCase().indexOf(c.toLowerCase()) !== -1) return;
+        labPrompt.value = cur ? cur.replace(/[,\s]+$/, '') + ', ' + c : c;
+        if (labPrompt.value.length > 200) labPrompt.value = labPrompt.value.slice(0, 200);
+        labPrompt.dispatchEvent(new Event('input'));
+        labPrompt.focus();
+        blorp(260);
+      });
+      labChips.appendChild(b);
+    });
+  }
+
+  if (labPrompt && labCount) {
+    labPrompt.addEventListener('input', function () {
+      labCount.textContent = labPrompt.value.length;
+    });
+    labPrompt.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') dressHim();
+    });
+  }
+
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  // The API always answers JSON; anything else means we're not on the
+  // deployed site (opened the file directly, or a plain static server).
+  function readJson(res) {
+    return res.text().then(function (t) {
+      try { return JSON.parse(t); }
+      catch (e) { throw new Error('OFFLINE'); }
+    });
+  }
+
+  function dressHim() {
+    if (labRunning || !labPrompt) return;
+    var prompt = labPrompt.value.replace(/\s+/g, ' ').trim();
+    if (!prompt) {
+      labSay('Tell him what to wear first.', 'bad');
+      labPrompt.focus();
+      return;
+    }
+
+    labBusyOn(true);
+    labSay('');
+    if (labBadge) labBadge.hidden = true;
+    blorp(240);
+
+    var line = 0;
+    if (labStatus) labStatus.textContent = WAIT_LINES[0];
+    var ticker = setInterval(function () {
+      line = (line + 1) % WAIT_LINES.length;
+      if (labStatus) labStatus.textContent = WAIT_LINES[line];
+    }, 3200);
+
+    fetch('/api/pfp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompt })
+    })
+      .then(function (res) {
+        return readJson(res).then(function (data) {
+          if (!res.ok) throw new Error(data.error || 'The stylist said no.');
+          if (!data.requestId) throw new Error('The stylist said nothing at all.');
+          return data.requestId;
+        });
+      })
+      .then(function (id) {
+        // ~90s of patience, then we give up
+        var tries = 0;
+        function check() {
+          tries++;
+          if (tries > 60) throw new Error('He is taking far too long. Try again.');
+          return sleep(1500)
+            .then(function () { return fetch('/api/pfp?id=' + encodeURIComponent(id)); })
+            .then(readJson)
+            .then(function (data) {
+              if (data.status === 'COMPLETED' && data.image) return data.image;
+              if (data.status === 'ERROR' || data.error) {
+                throw new Error(data.error || 'That outfit did not survive.');
+              }
+              return check();
+            });
+        }
+        return check();
+      })
+      .then(function (src) {
+        clearInterval(ticker);
+        labImg.src = src;
+        if (labSave) { labSave.href = src; labSave.hidden = false; }
+        if (labReset) labReset.hidden = false;
+        if (labBadge) labBadge.hidden = false;
+        if (labFrame) {
+          labFrame.classList.remove('is-fresh');
+          void labFrame.offsetWidth;
+          labFrame.classList.add('is-fresh');
+        }
+        labBusyOn(false);
+        labSay('There he is. Right click or hit save.', 'good');
+        blorp(420);
+        popHearts(document.querySelector('.lab__stage'), 6, '✨');
+      })
+      .catch(function (err) {
+        clearInterval(ticker);
+        labBusyOn(false);
+        // a non-JSON reply or a dead fetch both mean the API isn't there
+        var offline = !err || err.message === 'OFFLINE' || err.name === 'TypeError';
+        labSay(
+          offline
+            ? 'The generator only runs on the deployed site — it needs the server half.'
+            : err.message || 'Something went wrong. Try again.',
+          'bad'
+        );
+      });
+  }
+
+  if (labGo) labGo.addEventListener('click', dressHim);
+
+  if (labReset) {
+    labReset.addEventListener('click', function () {
+      labImg.src = BASE_PFP;
+      labSave.hidden = true;
+      labReset.hidden = true;
+      if (labBadge) labBadge.hidden = true;
+      labPrompt.value = '';
+      labPrompt.dispatchEvent(new Event('input'));
+      labSay('');
+      blorp(160);
+    });
+  }
+
+  /* ---------------------------------------------------------
      REVEAL ON SCROLL
      --------------------------------------------------------- */
   var revealTargets = $$('.reveal');
