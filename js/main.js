@@ -7,7 +7,7 @@
 
   var LOGO = 'assets/smol-tod.jpg';
   var CA = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx';   // <-- swap in the real contract address
-  var X_URL = '';                              // <-- paste the X / Twitter profile URL here
+  var X_URL = 'https://x.com/smoltod';         // X / Twitter profile
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $  = function (s, c) { return (c || document).querySelector(s); };
