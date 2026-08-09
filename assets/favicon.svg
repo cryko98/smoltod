@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#f7f3e6"/>
+  <!-- feet -->
+  <ellipse cx="21" cy="53" rx="8" ry="4" fill="#c4701e" stroke="#12120f" stroke-width="3"/>
+  <ellipse cx="43" cy="53" rx="8" ry="4" fill="#c4701e" stroke="#12120f" stroke-width="3"/>
+  <!-- sweater -->
+  <path d="M11 30h42v14a10 10 0 0 1-10 10H21a10 10 0 0 1-10-10z" fill="#1a5ce0" stroke="#12120f" stroke-width="3" stroke-linejoin="round"/>
+  <!-- head -->
+  <path d="M32 8c12 0 21 6 21 14 0 5-4 8-21 8s-21-3-21-8c0-8 9-14 21-14z" fill="#4e9e3e" stroke="#12120f" stroke-width="3" stroke-linejoin="round"/>
+  <!-- eyes -->
+  <ellipse cx="23" cy="16" rx="7" ry="6.5" fill="#fffdf6" stroke="#12120f" stroke-width="3"/>
+  <ellipse cx="42" cy="16" rx="7" ry="6.5" fill="#fffdf6" stroke="#12120f" stroke-width="3"/>
+  <circle cx="24.5" cy="17" r="3.6" fill="#12120f"/>
+  <circle cx="43.5" cy="17" r="3.6" fill="#12120f"/>
+  <!-- smirk -->
+  <path d="M18 27c5 3 23 3 28 0" fill="none" stroke="#12120f" stroke-width="3" stroke-linecap="round"/>
+</svg>

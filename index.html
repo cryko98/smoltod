@@ -1,0 +1,496 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SMOL TOD ($TOD) — the smollest, horniest toad on Solana</title>
+<meta name="description" content="SMOL TOD is 4.2 centimetres of raw amphibian confidence in a sweater six sizes too big. $TOD on Solana. No utility. Only rizz." />
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="assets/smol-tod.jpg" />
+<link rel="apple-touch-icon" href="assets/smol-tod.jpg" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SMOL TOD ($TOD)" />
+<meta property="og:description" content="4.2 centimetres of raw amphibian confidence. He is smol. He is horny. He is on Solana." />
+<meta property="og:image" content="assets/smol-tod.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="SMOL TOD ($TOD)" />
+<meta name="twitter:description" content="4.2 centimetres of raw amphibian confidence. He is smol. He is horny. He is on Solana." />
+<meta name="twitter:image" content="assets/smol-tod.jpg" />
+<meta name="theme-color" content="#1a5ce0" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============ GOO / PAPER TEXTURE FILTERS ============ -->
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="goo" />
+      <feBlend in="SourceGraphic" in2="goo" />
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<!-- ============ HORNY METER ============ -->
+<aside class="hornymeter" aria-hidden="true">
+  <div class="hornymeter__label">H O R N I N E S S</div>
+  <div class="hornymeter__tube">
+    <div class="hornymeter__fill" id="hornyFill"></div>
+    <div class="hornymeter__ticks"></div>
+  </div>
+  <div class="hornymeter__bulb">🫠</div>
+  <div class="hornymeter__pct" id="hornyPct">0%</div>
+</aside>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top">
+    <img src="assets/smol-tod.jpg" alt="" class="nav__logo" />
+    <span class="nav__name">SMOL TOD</span>
+    <span class="nav__tick">$TOD</span>
+  </a>
+
+  <nav class="nav__links" aria-label="Main">
+    <a href="#lore">Lore</a>
+    <a href="#todnomics">Todnomics</a>
+    <a href="#memes">Meme Vault</a>
+    <a href="#buy">How to Buy</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+
+  <div class="nav__right">
+    <button class="iconbtn" id="soundBtn" aria-pressed="false" title="Toggle toad noises">
+      <span class="iconbtn__on" aria-hidden="true">🔇</span>
+      <span class="sr-only">Toggle sound</span>
+    </button>
+    <a class="btn btn--x" href="#" data-x-link title="X / Twitter — link coming soon">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      <span>Follow</span>
+    </a>
+  </div>
+
+  <button class="nav__burger" id="burger" aria-expanded="false" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ============ HERO ============ -->
+<main id="top">
+<section class="hero">
+  <div class="hero__blobs" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+  </div>
+
+  <div class="hero__stickers" aria-hidden="true" id="parallaxLayer">
+    <span class="fsticker" data-depth="26" style="--x:6%;  --y:18%; --r:-14deg">RIBBIT</span>
+    <span class="fsticker fsticker--blue" data-depth="40" style="--x:86%; --y:14%; --r:11deg">4.2 cm</span>
+    <span class="fsticker fsticker--orange" data-depth="18" style="--x:10%; --y:74%; --r:8deg">NO UTILITY</span>
+    <span class="fsticker" data-depth="34" style="--x:88%; --y:70%; --r:-9deg">ONLY RIZZ</span>
+    <span class="fsticker fsticker--blue" data-depth="22" style="--x:48%; --y:6%;  --r:-4deg">SWEATER GUY</span>
+  </div>
+
+  <div class="hero__inner">
+    <p class="hero__kicker">
+      <span class="dot"></span> live on solana · certified smol · unwell
+    </p>
+
+    <h1 class="hero__title">
+      <span class="word word--green" data-text="SMOL">SMOL</span>
+      <span class="word word--blue" data-text="TOD">TOD</span>
+    </h1>
+
+    <p class="hero__sub">
+      Four point two centimetres of pure, unfiltered amphibian confidence —
+      wrapped in a blue sweater <em>six sizes</em> too big, because the boy has
+      <strong>nothing</strong> to prove and is going to prove it anyway.
+    </p>
+
+    <div class="hero__stage">
+      <div class="tod" id="todStage" tabindex="0" role="button" aria-label="Poke Smol Tod">
+        <div class="tod__shadow"></div>
+        <img src="assets/smol-tod.jpg" alt="Smol Tod, a small green toad wearing an oversized blue sweater" class="tod__img" id="todImg" />
+        <div class="tod__hearts" id="heartLayer" aria-hidden="true"></div>
+        <span class="tod__poke">poke him →</span>
+      </div>
+    </div>
+
+    <div class="ca">
+      <span class="ca__label">CA</span>
+      <code class="ca__value" id="caValue">xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+      <button class="ca__copy" id="copyBtn">
+        <span id="copyText">COPY</span>
+      </button>
+    </div>
+
+    <div class="hero__cta">
+      <a class="btn btn--big btn--green" href="#buy">
+        GET TODDED <span aria-hidden="true">🐸</span>
+      </a>
+      <a class="btn btn--big btn--ghost" href="#lore">READ THE LORE</a>
+    </div>
+
+    <ul class="hero__trust">
+      <li><b>0%</b> tax</li>
+      <li><b>100%</b> toad</li>
+      <li><b>1B</b> supply</li>
+      <li><b>∞</b> horny</li>
+    </ul>
+  </div>
+
+  <div class="hero__scroll" aria-hidden="true">
+    <span>scroll</span>
+    <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 16l-6-6h12z"/></svg>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee marquee--green" aria-hidden="true">
+  <div class="marquee__track">
+    <span>SMOL &amp; PROUD</span><i>🐸</i><span>HE IS 4.2 CM</span><i>💧</i><span>THE SWEATER STAYS ON</span><i>🐸</i><span>$TOD</span><i>💦</i>
+    <span>SMOL &amp; PROUD</span><i>🐸</i><span>HE IS 4.2 CM</span><i>💧</i><span>THE SWEATER STAYS ON</span><i>🐸</i><span>$TOD</span><i>💦</i>
+    <span>SMOL &amp; PROUD</span><i>🐸</i><span>HE IS 4.2 CM</span><i>💧</i><span>THE SWEATER STAYS ON</span><i>🐸</i><span>$TOD</span><i>💦</i>
+  </div>
+</div>
+
+<!-- ============ LORE ============ -->
+<section class="section section--lore" id="lore">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">chapter one</span>
+      <h2 class="shead__title">THE LORE OF <span class="hl hl--green">SMOL TOD</span></h2>
+      <p class="shead__sub">
+        A completely true story about a very small toad with a very large personal life.
+      </p>
+    </header>
+
+    <div class="panels">
+      <article class="panel reveal" style="--tilt:-1.6deg">
+        <div class="panel__num">01</div>
+        <h3>Born in a puddle nobody mapped</h3>
+        <p>
+          Smol Tod hatched in a rain puddle behind a petrol station, roughly the size of a
+          dinner plate and twice as ambitious. The other tadpoles grew into normal, respectable
+          frogs. Tod stopped at <b>4.2 centimetres</b> and decided that was a <em>choice</em>, not
+          a limitation.
+        </p>
+        <div class="panel__tag">certified: smol</div>
+      </article>
+
+      <article class="panel panel--blue reveal" style="--tilt:1.4deg">
+        <div class="panel__num">02</div>
+        <h3>The Sweater Incident</h3>
+        <p>
+          At fourteen months he bought a blue sweater six sizes too big so people would think he
+          was <em>bulky</em>. It worked immediately. To this day nobody has seen what is under
+          there, and frankly nobody in the puddle is brave enough to ask.
+          Legal has advised him to keep it that way.
+        </p>
+        <div class="panel__tag">status: mysterious</div>
+      </article>
+
+      <article class="panel panel--orange reveal" style="--tilt:-1.1deg">
+        <div class="panel__num">03</div>
+        <h3>The Rizz Awakening</h3>
+        <p>
+          One damp Tuesday, Tod discovered that if he lowered his eyelids <b>exactly 40%</b> and
+          said nothing at all, every creature in a 30 metre radius would suddenly need to sit down.
+          Scientists call it "the smoulder". Tod calls it "Tuesday".
+          Three lily pads filed complaints. All three were flirting.
+        </p>
+        <div class="panel__tag">eyelids: 40% down</div>
+      </article>
+
+      <article class="panel panel--green reveal" style="--tilt:1.8deg">
+        <div class="panel__num">04</div>
+        <h3>He fell in love with a chart</h3>
+        <p>
+          Tod hopped past a phone screen, saw a green candle, and something inside him
+          <em>woke up</em>. He has been unwell ever since. He now checks the chart 400 times a day,
+          whispers "she's beautiful" at the 15-minute timeframe, and has been formally banned from
+          three trading Discords for excessive winking.
+        </p>
+        <div class="panel__tag">diagnosis: chronically horny</div>
+      </article>
+    </div>
+
+    <div class="lorequote reveal">
+      <img src="assets/smol-tod.jpg" alt="" class="lorequote__face" />
+      <blockquote>
+        “I am small. I am damp. I am in love with everyone in this room.
+        <span>Please buy my coin.”</span>
+      </blockquote>
+      <cite>— Smol Tod, addressing the pond council, 4:12 AM</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TODNOMICS ============ -->
+<section class="section section--dark" id="todnomics">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">the numbers</span>
+      <h2 class="shead__title">TOD<span class="hl hl--blue">NOMICS</span></h2>
+      <p class="shead__sub">Simple, like him.</p>
+    </header>
+
+    <div class="stats">
+      <div class="stat reveal">
+        <div class="stat__val" data-count="1000000000" data-suffix="">0</div>
+        <div class="stat__key">Total supply</div>
+        <div class="stat__note">one for every dream he's had about you</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat__val" data-count="0" data-suffix="%">0%</div>
+        <div class="stat__key">Buy / sell tax</div>
+        <div class="stat__note">he takes nothing but your attention</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat__val" data-count="100" data-suffix="%">0%</div>
+        <div class="stat__key">LP burned</div>
+        <div class="stat__note">the matches are gone, we checked</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat__val stat__val--txt">4.2<small>cm</small></div>
+        <div class="stat__key">Verified toad height</div>
+        <div class="stat__note">measured daily, rounded up, always</div>
+      </div>
+    </div>
+
+    <div class="allocs reveal">
+      <div class="alloc">
+        <div class="alloc__bar"><i style="--w:94%"></i></div>
+        <span class="alloc__name">Liquidity pool</span><span class="alloc__pct">94%</span>
+      </div>
+      <div class="alloc">
+        <div class="alloc__bar alloc__bar--blue"><i style="--w:4%"></i></div>
+        <span class="alloc__name">Marketing (posting him everywhere)</span><span class="alloc__pct">4%</span>
+      </div>
+      <div class="alloc">
+        <div class="alloc__bar alloc__bar--orange"><i style="--w:2%"></i></div>
+        <span class="alloc__name">Sweater maintenance fund</span><span class="alloc__pct">2%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEME VAULT ============ -->
+<section class="section section--memes" id="memes">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">handle with gloves</span>
+      <h2 class="shead__title">THE <span class="hl hl--orange">MEME VAULT</span></h2>
+      <p class="shead__sub">Right click, save, ruin somebody's group chat. Hover them. They're alive.</p>
+    </header>
+  </div>
+
+  <div class="memegrid" id="memegrid">
+    <!-- injected by JS -->
+  </div>
+</section>
+
+<div class="marquee marquee--blue" aria-hidden="true">
+  <div class="marquee__track marquee__track--rev">
+    <span>MY EYES ARE UP HERE</span><i>👀</i><span>THEY WERE NOT</span><i>🐸</i><span>SHORT KING SZN</span><i>👑</i>
+    <span>MY EYES ARE UP HERE</span><i>👀</i><span>THEY WERE NOT</span><i>🐸</i><span>SHORT KING SZN</span><i>👑</i>
+    <span>MY EYES ARE UP HERE</span><i>👀</i><span>THEY WERE NOT</span><i>🐸</i><span>SHORT KING SZN</span><i>👑</i>
+  </div>
+</div>
+
+<!-- ============ HOW TO BUY ============ -->
+<section class="section" id="buy">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">four hops</span>
+      <h2 class="shead__title">HOW TO GET <span class="hl hl--green">TODDED</span></h2>
+      <p class="shead__sub">If a 4.2 cm toad can do it, so can you.</p>
+    </header>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__n">1</span>
+        <h3>Get a wallet</h3>
+        <p>Download Phantom or Solflare. Write the seed phrase on paper. Not in your notes app. Not in a DM. <b>Tod is watching and he is disappointed.</b></p>
+      </li>
+      <li class="step reveal">
+        <span class="step__n">2</span>
+        <h3>Fund it with SOL</h3>
+        <p>Buy SOL anywhere and send it to your shiny new wallet. Leave a little extra for fees — the network charges rent and Tod does not negotiate.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__n">3</span>
+        <h3>Swap for $TOD</h3>
+        <p>Open Jupiter or Raydium, paste the contract address from the top of this page, and swap. Double check every character. Twice. Then once more.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__n">4</span>
+        <h3>Become insufferable</h3>
+        <p>Change your profile picture to a damp toad. Reply "smol" under unrelated posts. Tell your family at dinner. There is no step five.</p>
+      </li>
+    </ol>
+
+    <div class="buycta reveal">
+      <div class="buycta__ca">
+        <span>Contract address</span>
+        <code id="caValue2">xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+      </div>
+      <button class="btn btn--big btn--blue" id="copyBtn2">COPY CA</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="section section--road">
+  <div class="wrap">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">a plan, allegedly</span>
+      <h2 class="shead__title">ROAD TO <span class="hl hl--blue">PUDDLE DOMINANCE</span></h2>
+    </header>
+
+    <div class="road">
+      <div class="road__line" aria-hidden="true"></div>
+
+      <div class="rstep reveal">
+        <div class="rstep__dot">🥚</div>
+        <div class="rstep__card">
+          <h3>Phase 0 — Be smol</h3>
+          <p>Complete. Was born this way. No further action required.</p>
+        </div>
+      </div>
+
+      <div class="rstep rstep--alt reveal">
+        <div class="rstep__dot">😳</div>
+        <div class="rstep__card">
+          <h3>Phase 1 — Be horny</h3>
+          <p>Also complete, arguably overachieved. Launch on Solana, burn the LP, wink at every chart in a 40 km radius.</p>
+        </div>
+      </div>
+
+      <div class="rstep reveal">
+        <div class="rstep__dot">📣</div>
+        <div class="rstep__card">
+          <h3>Phase 2 — Puddle expansion</h3>
+          <p>Meme raids, sticker packs, the toad in every timeline. Trending on X or the sweater comes off. (It will not come off.)</p>
+        </div>
+      </div>
+
+      <div class="rstep rstep--alt reveal">
+        <div class="rstep__dot">🌊</div>
+        <div class="rstep__card">
+          <h3>Phase 3 — From puddle to pond</h3>
+          <p>Listings, tracker partners, a community that is far too emotionally invested in an amphibian. Ideal.</p>
+        </div>
+      </div>
+
+      <div class="rstep reveal">
+        <div class="rstep__dot">👑</div>
+        <div class="rstep__card">
+          <h3>Phase 4 — Still smol. Just richer.</h3>
+          <p>He will not grow. He will not change. He will simply own a slightly nicer puddle and continue to be a menace.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section section--faq" id="faq">
+  <div class="wrap wrap--narrow">
+    <header class="shead reveal">
+      <span class="shead__eyebrow">you asked</span>
+      <h2 class="shead__title">TOD <span class="hl hl--orange">ANSWERS</span></h2>
+    </header>
+
+    <div class="faq">
+      <details class="qa reveal" open>
+        <summary>Is he actually that small?</summary>
+        <div class="qa__body"><p>4.2 centimetres, measured every morning against the fridge, always rounded up, occasionally on tiptoes. The puddle council has stopped arguing about it.</p></div>
+      </details>
+      <details class="qa reveal">
+        <summary>Why is he like this?</summary>
+        <div class="qa__body"><p>He's a toad in spring. It's a documented medical condition known as "being a toad". There is no cure and he has refused all treatment.</p></div>
+      </details>
+      <details class="qa reveal">
+        <summary>What's under the sweater?</summary>
+        <div class="qa__body"><p>Counsel has advised no comment. Multiple witnesses describe "just more toad". One witness has not spoken since.</p></div>
+      </details>
+      <details class="qa reveal">
+        <summary>What's the utility?</summary>
+        <div class="qa__body"><p>Emotional damage, an unreasonable amount of green, and a small damp friend who believes in you. There is no roadmap to a Layer 2. There is a roadmap to a slightly bigger puddle.</p></div>
+      </details>
+      <details class="qa reveal">
+        <summary>Is this financial advice?</summary>
+        <div class="qa__body"><p>It is a cartoon toad in a sweater. $TOD is a memecoin with no intrinsic value and no expectation of financial return. Buy only what you can afford to lose completely, and do your own research.</p></div>
+      </details>
+      <details class="qa reveal">
+        <summary>How do I get involved?</summary>
+        <div class="qa__body"><p>Grab a bag, follow the X account, and post him relentlessly. The community <em>is</em> the roadmap. Tod just supplies the vibes and the eye contact.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="finalcta">
+  <div class="finalcta__toads" aria-hidden="true" id="ctaToads"></div>
+  <div class="wrap">
+    <h2 class="finalcta__title">HE'S SMOL.<br />HE'S HORNY.<br />HE'S ON <span>SOLANA</span>.</h2>
+    <p class="finalcta__sub">You've read this far. You're already one of us. Just make it official.</p>
+    <div class="finalcta__btns">
+      <a class="btn btn--big btn--green" href="#buy">BUY $TOD</a>
+      <a class="btn btn--big btn--x btn--xbig" href="#" data-x-link>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        FOLLOW ON X
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <img src="assets/smol-tod.jpg" alt="" />
+      <div>
+        <b>SMOL TOD</b>
+        <span>$TOD · Solana</span>
+      </div>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="#lore">Lore</a>
+      <a href="#todnomics">Todnomics</a>
+      <a href="#memes">Memes</a>
+      <a href="#buy">How to buy</a>
+      <a href="#faq">FAQ</a>
+      <a href="#" data-x-link>X</a>
+    </nav>
+    <p class="footer__disc">
+      $TOD is a meme coin created for entertainment. It has no intrinsic value, no promise of
+      financial return, no formal team and no roadmap beyond making people laugh. Nothing on this
+      site is financial advice. Crypto is risky — only spend what you can afford to lose. Tod is
+      not a licensed anything.
+    </p>
+    <p class="footer__copy">© <span id="year">2026</span> Smol Tod. Built damp. <span class="footer__egg" id="egg">🐸</span></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

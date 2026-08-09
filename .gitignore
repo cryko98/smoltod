@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+.vercel
+node_modules/
+*.log
+
+# original drop of the logo - the site uses assets/smol-tod.jpg
+smol tod.jpg
