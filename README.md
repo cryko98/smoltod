@@ -39,7 +39,7 @@ all nine). If you add more, compress them the same way before shipping.
 Both values live at the top of `js/main.js`:
 
 ```js
-var CA    = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx';
+var CA    = '9Z1pj1bkgH8f2RoTq3h3TtvPsgrqVegwJbFsqpgmpump';
 var X_URL = 'https://x.com/smoltod_';
 ```
 
