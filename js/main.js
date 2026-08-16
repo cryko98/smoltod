@@ -6,8 +6,8 @@
   'use strict';
 
   var LOGO = 'assets/smol-tod.jpg';
-  var CA = '9w2nokGrjFACQaJaEJGafZgsxBePfDWdUav6ofSJpump';   // token contract address
-  var X_URL = 'https://x.com/smoltod';         // X / Twitter profile
+  var CA = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx';   // token contract address
+  var X_URL = 'https://x.com/smoltod_';         // X / Twitter profile
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $  = function (s, c) { return (c || document).querySelector(s); };

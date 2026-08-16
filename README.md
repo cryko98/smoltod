@@ -1,4 +1,4 @@
-# SMOL TOD ($TOD)
+﻿# SMOL TOD ($TOD)
 
 Static site for the Smol Tod memecoin on Solana. Plain HTML/CSS/JS — no build step, no
 dependencies. Vercel serves it as-is.
@@ -39,8 +39,8 @@ all nine). If you add more, compress them the same way before shipping.
 Both values live at the top of `js/main.js`:
 
 ```js
-var CA    = '9w2nokGrjFACQaJaEJGafZgsxBePfDWdUav6ofSJpump';
-var X_URL = 'https://x.com/smoltod';
+var CA    = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx';
+var X_URL = 'https://x.com/smoltod_';
 ```
 
 - **CA** — injected into the hero bar and the "How to buy" block, and used by both copy
